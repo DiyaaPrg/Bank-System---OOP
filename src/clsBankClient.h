@@ -320,5 +320,18 @@ public:
 
         return totalbalances;
     }
+
+   bool Transfer(double amount, clsBankClient &ClientTransferFrom)
+    {
+    if (amount > AccountBalance)
+        return false;
+    else
+    {
+        WithDraw(amount);
+        ClientTransferFrom.Deposit(amount);
+        return true;
+    }
+}
 };
+
 
