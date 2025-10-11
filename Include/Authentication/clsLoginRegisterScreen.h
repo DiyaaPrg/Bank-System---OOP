@@ -21,7 +21,11 @@ public:
 
     static void ShowRegisterList()
     {
-
+        if (!_CheckAccessRights(clsUser::enPermessions::ShowLoginRegister)) // this function is in a header but why it work well although I didn't include that header
+        {
+            return;
+        }
+        
         vector <clsUser::stLoginRegister> vLoginRegister = clsUser::GetRegisterList();
 
         string Title = "\t Login Register List Screen";
@@ -55,4 +59,5 @@ public:
 
     }
 };
+
 
