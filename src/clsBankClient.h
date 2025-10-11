@@ -124,6 +124,34 @@ private:
         _AddDataLineToFile(_ConvertClientObjectToLine(*this));
     }
 
+    string _PrepareTransferLogLine(double Amount, clsBankClient ClientTransferFrom,string seperator = "#//#")
+    {
+        string TransferLogRecordInLine;
+
+        TransferLogRecordInLine += clsDate::GetSystemDateTimeString() + seperator;
+        TransferLogRecordInLine += _AccountNumber + seperator;
+        TransferLogRecordInLine += ClientTransferFrom._AccountNumber + seperator;
+        TransferLogRecordInLine +=  to_string(Amount) + seperator;
+        TransferLogRecordInLine +=  to_string( _AccountBalance) + seperator;
+        TransferLogRecordInLine += to_string(ClientTransferFrom._AccountBalance) + seperator;
+        TransferLogRecordInLine += CurrentUser.UserName;
+
+        return TransferLogRecordInLine;
+    }
+
+    void _RegisterTransfer(string DataLine)
+    {
+        fstream file;
+        file.open("TransferLog.txt", ios::app | ios::out);
+
+        if (file.is_open())
+        {
+            file << DataLine << endl;
+        }
+
+        file.close();
+    }
+
 
 public:
 
@@ -333,5 +361,6 @@ public:
     }
 }
 };
+
 
 
