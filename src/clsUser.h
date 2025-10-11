@@ -182,8 +182,9 @@ public:
 
     enum enPermessions {
         enAll = -1, ShowList = 1, AddNewClient = 2, DeleteClient = 4, UpdateClient = 8, FindClient = 16,
-        Transactions = 32, ManageUsers = 64
+        Transactions = 32, ManageUsers = 64, ShowLoginRegister = 128
     };
+
 
     clsUser(enMode Mode, string FirstName, string LastName,
         string Email, string Phone, string UserName, string Password,
@@ -442,4 +443,5 @@ public:
     }
 
 };
+
 
