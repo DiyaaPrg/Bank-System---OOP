@@ -113,6 +113,13 @@ private:
             Permissions += clsUser::enPermessions::ManageUsers;
         }
 
+        cout << "\nShow Register Record? y/n? ";
+        cin >> Answer;
+        if (Answer == 'y' || Answer == 'Y')
+        {
+            Permissions += clsUser::enPermessions::ShowLoginRegister;
+        }
+
         return Permissions;
 
     }
@@ -168,4 +175,5 @@ public:
 
 
 };
+
 
