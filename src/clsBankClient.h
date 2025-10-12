@@ -5,7 +5,8 @@
 #include <vector>
 #include <string>
 #include <fstream>
-
+#include "clsDate.h"
+#include "Global.h"
 using namespace std;
 
 
@@ -28,7 +29,7 @@ private:
         vClientData = clsString::Split(line, seperator);
 
         return clsBankClient(enMode::UpdateMode, vClientData[0], vClientData[1], vClientData[2],
-            vClientData[3], vClientData[4], vClientData[5], stod(vClientData[6]));
+            vClientData[3], vClientData[4], clsString::DecryptText(vClientData[5], Key), stod(vClientData[6]));
     }
 
     static vector <clsBankClient> _LoadDataFromFileToVector()
@@ -58,7 +59,7 @@ private:
         line += client.Email + seperator;
         line += client.Phone + seperator;
         line += client.AccountNumber() + seperator;
-        line += client.PinCode + seperator;
+        line += clsString::EncryptText(client.PinCode, Key) + seperator;
         line += to_string(client.AccountBalance);
 
         return line;
@@ -173,6 +174,7 @@ private:
 
 public:
 
+    
     clsBankClient(enMode mode, string firstname, string lastname, string email, string phone, string accountnumber, string pincode, double accountbalance)
         : clsPerson(firstname, lastname, email, phone)
     {
@@ -182,16 +184,16 @@ public:
         _AccountBalance = accountbalance;
     }
 
-  struct stTransferLogRecord
-  {
-      string DateTime;
-      string sAccount; //source client Account
-      string dAccount; //destination client Account
-      double Amount;
-      double sBalance; //source client balance
-      double dBalance; //destination client balance
-      string UserName;
-  };
+    struct stTransferLogRecord
+    {
+        string DateTime;
+        string sAccount; //source client Account
+        string dAccount; //destination client Account
+        double Amount;
+        double sBalance; //source client balance
+        double dBalance; //destination client balance
+        string UserName;
+    };
 
     bool IsEmpty()
     {
@@ -335,13 +337,13 @@ public:
 
     }
 
-    void Deposit(float amount)
+    void Deposit(double amount)
     {
         _AccountBalance += amount;
         Save();
     }
 
-    bool WithDraw(float amount)
+    bool WithDraw(double amount)
     {
         if (amount > AccountBalance)
         {
@@ -378,18 +380,20 @@ public:
         return totalbalances;
     }
 
-   bool Transfer(double amount, clsBankClient &ClientTransferFrom)
+    bool Transfer(double amount, clsBankClient &ClientTransferFrom)
     {
-    if (amount > AccountBalance)
-        return false;
-    else
-    {
-        WithDraw(amount);
-        ClientTransferFrom.Deposit(amount);
-        return true;
+        if (amount > AccountBalance)
+            return false;
+        else
+        {
+            WithDraw(amount);
+            ClientTransferFrom.Deposit(amount);
+            _RegisterTransfer(_PrepareTransferLogLine(amount, ClientTransferFrom));
+            return true;
+        }
     }
 
-            static vector <stTransferLogRecord> GetTransferLogRecord()
+    static vector <stTransferLogRecord> GetTransferLogRecord()
     {
         fstream file;
 
@@ -410,9 +414,5 @@ public:
         file.close();
         return vTranferLogRecord;
     }
-}
 };
-
-
-
 
