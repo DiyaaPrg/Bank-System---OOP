@@ -6,6 +6,7 @@
 #include <vector>
 #include <fstream>
 #include "clsDate.h"
+#include "Global.h"
 
 using namespace std;
 class clsUser : public clsPerson
@@ -26,7 +27,7 @@ private:
         
         LogInRecord += clsDate::GetSystemDateTimeString() + seperator;
         LogInRecord += _UserName + seperator;
-        LogInRecord += _Password + seperator;
+        LogInRecord += clsString::EncryptText(_Password) + seperator;
         LogInRecord += to_string(_Permissions);
 
         return LogInRecord;
@@ -38,7 +39,7 @@ private:
         vUserData = clsString::Split(Line, Seperator);
 
         return clsUser(enMode::UpdateMode, vUserData[0], vUserData[1], vUserData[2],
-            vUserData[3], vUserData[4], vUserData[5], stoi(vUserData[6]));
+            vUserData[3], vUserData[4], clsString::DecryptText(vUserData[5]), stoi(vUserData[6]));
 
     }
 
@@ -51,7 +52,7 @@ private:
         UserRecord += User.Email + Seperator;
         UserRecord += User.Phone + Seperator;
         UserRecord += User.UserName + Seperator;
-        UserRecord += User.Password + Seperator;
+        UserRecord += clsString::EncryptText (User.Password, 2) + Seperator;
         UserRecord += to_string(User.Permissions);
 
         return UserRecord;
@@ -89,6 +90,7 @@ private:
     }
 
     struct stLoginRegister;
+    // convert the line to a filled stLoginRegister variable, to use or print
     static stLoginRegister _ConvertLineToLoginRegister(string line)
     {
         stLoginRegister LoginRegisterRecord;
@@ -97,7 +99,7 @@ private:
 
         LoginRegisterRecord.DateTime = vLogRegisterLine.at(0);
         LoginRegisterRecord.UserName= vLogRegisterLine.at(1);
-        LoginRegisterRecord.Password = vLogRegisterLine.at(2);
+        LoginRegisterRecord.Password = clsString::DecryptText( vLogRegisterLine.at(2));
         LoginRegisterRecord.Permissions = stoi(vLogRegisterLine.at(3));
 
         return LoginRegisterRecord;
@@ -184,7 +186,6 @@ public:
         enAll = -1, ShowList = 1, AddNewClient = 2, DeleteClient = 4, UpdateClient = 8, FindClient = 16,
         Transactions = 32, ManageUsers = 64, ShowLoginRegister = 128
     };
-
 
     clsUser(enMode Mode, string FirstName, string LastName,
         string Email, string Phone, string UserName, string Password,
@@ -417,6 +418,7 @@ public:
         file.close();
     }
 
+    // Convert lines from file to a filled vector
     static vector <stLoginRegister> GetRegisterList()
     {
         vector <stLoginRegister> vLoginRegisterRecord;
@@ -443,5 +445,4 @@ public:
     }
 
 };
-
 
