@@ -42,7 +42,7 @@ private:
 
     static void _ShowUpdateRateScreen()
     {
-        cout << "Update Rate will be here soon....\n";
+        clsShowUpdateRateScreen::ShowUpdateRateScreen();
     }
 
     static void _ShowCurrencyCalculatorScreen()
@@ -116,5 +116,6 @@ public:
         _PerformCurrencyOptions(enCurrencyMenueOptions(_ReadCurrenciesMenueOption()));
     }
 };
+
 
 
