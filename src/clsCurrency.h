@@ -66,7 +66,7 @@ private:
 	{
 		fstream file;
 
-		file.open("Currencies.txt", ios::app | ios::out);
+		file.open("Currencies.txt", ios::out);
 
 		if (file.is_open())
 		{
@@ -208,4 +208,5 @@ public:
 	}
 
 };
+
 
