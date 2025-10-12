@@ -152,6 +152,24 @@ private:
         file.close();
     }
 
+    struct stTransferLogRecord;
+
+    static stTransferLogRecord _ConvertLineToTransferLogRecord(string line)
+    {
+        stTransferLogRecord TransferLog;
+        vector <string> vRecord = clsString::Split(line, "#//#");
+
+        TransferLog.DateTime = vRecord.at(0);
+        TransferLog.sAccount = vRecord.at(1);
+        TransferLog.dAccount = vRecord.at(2);
+        TransferLog.Amount = stod(vRecord.at(3));
+        TransferLog.sBalance = stod(vRecord.at(4));
+        TransferLog.dBalance = stod(vRecord.at(5));
+        TransferLog.UserName = (vRecord.at(6));
+
+        return TransferLog;
+    }
+
 
 public:
 
@@ -163,6 +181,17 @@ public:
         _PinCode = pincode;
         _AccountBalance = accountbalance;
     }
+
+  struct stTransferLogRecord
+  {
+      string DateTime;
+      string sAccount; //source client Account
+      string dAccount; //destination client Account
+      double Amount;
+      double sBalance; //source client balance
+      double dBalance; //destination client balance
+      string UserName;
+  };
 
     bool IsEmpty()
     {
@@ -359,8 +388,31 @@ public:
         ClientTransferFrom.Deposit(amount);
         return true;
     }
+
+            static vector <stTransferLogRecord> GetTransferLogRecord()
+    {
+        fstream file;
+
+        vector <stTransferLogRecord> vTranferLogRecord;
+        
+        file.open("TransferLog.txt", ios::in);
+
+        if (file.is_open())
+        {
+            string line;
+
+            while (getline(file, line))
+            {
+                stTransferLogRecord Record = _ConvertLineToTransferLogRecord(line);
+                vTranferLogRecord.push_back(Record);
+            }
+        }
+        file.close();
+        return vTranferLogRecord;
+    }
 }
 };
+
 
 
 
