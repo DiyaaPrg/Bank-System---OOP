@@ -207,6 +207,28 @@ public:
 		return vCurrencies;
 	}
 
+	float ConvertToUSD(float amount)
+	{
+		return (amount / Rate());
+	}
+
+	float ConvertFromUSD(float amount, clsCurrency currency2)
+	{
+		return (amount * currency2.Rate());
+	}
+
+	float ConvertToOtherCurrency(float amount, clsCurrency currency2)
+	{
+		float amountInUSD = ConvertToUSD(amount);
+
+		if (currency2.CurrencyCode() == "USD")
+			return amountInUSD;
+
+		return (amountInUSD * currency2.Rate());
+	}
+
+
 };
+
 
 
