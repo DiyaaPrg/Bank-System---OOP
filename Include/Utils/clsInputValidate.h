@@ -12,20 +12,26 @@ public:
 
 	enum enDateCompare { Before = -1, Equal = 0, After = 1 };
 
-	static bool IsNumberBetween(int number, int from, int to)
+	template <typename T>
+	static T IsNumberBetween(T num, T from, T to)
 	{
-		return (number >= from && number <= to);
+		return (num >= from && num <= to);
 	}
 
-	static bool IsNumberBetween(double number, double from, double to)
-	{
-		return (number >= from && number <= to);
-	}
+	//static bool IsNumberBetween(int number, int from, int to)
+	//{
+	//	return (number >= from && number <= to);
+	//}
 
-	static bool IsNumberBetween(float number, float from, float to)
-	{
-		return (number >= from && number <= to);
-	}
+	//static bool IsNumberBetween(double number, double from, double to)
+	//{
+	//	return (number >= from && number <= to);
+	//}
+
+	//static bool IsNumberBetween(float number, float from, float to)
+	//{
+	//	return (number >= from && number <= to);
+	//}
 
 	static bool IsDateBetween(clsDate date, clsDate date1, clsDate date2)
 	{
@@ -53,10 +59,11 @@ public:
 		getline(cin >> ws, text);
 		return text;
 	}
-	
-	static int ReadIntNumber(string warningMessage = "Invalid Number, Enter again:\n")
+
+	template <typename T>
+	static T ReadNumber(string warningMessage = "Invalid Number, Enter again:\n")
 	{
-		int number;
+		T number;
 		cin >> number;
 		while (number <= 0 || cin.fail())
 		{
@@ -70,73 +77,29 @@ public:
 		return number;
 	}
 
-	static double ReadDblNumber(string warningMessage = "Invalid Number, Enter again:\n")
+	template <typename Y>
+	static Y ReadNumberBetween(Y from, Y to, string warningMessage)
 	{
-		double number;
-		cin >> number;
-		while (number <= 0 || cin.fail())
-		{
-			cin.clear();
-			cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-
-			cout << warningMessage;
-			cin >> number;
-		}
-
-		return number;
-	}
-
-	static int ReadIntNumberBetween(int from, int to, string warningMessage)
-	{
-		int number;
-		number = ReadIntNumber();
+		Y number;
+		number = clsInputValidate::ReadNumber<Y>(); 
 		while (cin.fail() || !IsNumberBetween(number, from, to))
 		{
 			cin.clear();
 			cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
 			cout << warningMessage;
-			number = ReadIntNumber();
+			number = clsInputValidate:: ReadNumber<Y>(); 
 		}
 
 		return number;
 	}
 
-	static double ReadDblNumberBetween(double from, double to, string warningMessage)
-	{
-		double number;
-	    number = ReadDblNumber();
-		while ( cin.fail() || !IsNumberBetween(number, from, to))
-		{
-			cin.clear();
-			cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-
-			cout << warningMessage;
-			number = ReadDblNumber();
-		}
-
-		return number;
-	}
+	
 
 	static	bool IsValidDate(clsDate Date)
 	{
 		return (clsDate::IsValidDate(Date));
 	}
 
-	static float ReadFLoat(string warningMessage = "Invalid Number, Enter again:\n")
-	{
-		float number = 0;;
-		cin >> number;
-
-		while (cin.fail())
-		{
-			cin.clear();
-			cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-
-			cout << warningMessage;
-			cin >> number;
-		}
-		return number;
-	}
 };
 
