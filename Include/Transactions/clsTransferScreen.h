@@ -57,6 +57,12 @@ public:
 
 		// Client Transfer To:
 		clsBankClient ClientTransferTo = clsBankClient::Find(_ReadAccountNumber("\nPlease enter Account Number to Transfer To: "));
+
+	    while (ClientTransferTo.AccountNumber() == ClientTransferFrom.AccountNumber())
+		{
+			cout << "\nYou cannot Transfer between same accounts!\n";
+			ClientTransferTo = clsBankClient::Find(_ReadAccountNumber("\nPlease enter Account Number to Transfer To: "));
+		}
 		_PrintClient(ClientTransferTo);
 
 		double Amount = _ReadWithDrawAmount("\nPlease enter Transfer amount: ");
@@ -86,4 +92,5 @@ public:
 
 	}
 };
+
 
