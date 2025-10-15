@@ -13,12 +13,12 @@ private:
     static void _PrintDataLine(clsBankClient::stTransferLogRecord record)
     {
         cout << setw(8) << left << "" << "| " << setw(25) << left << record.DateTime;
-        cout << "| " << setw(10) << left << record.UserName;
+        cout << "| " << setw(10) << left << record.sAccount;
         cout << "| " << setw(10) << left << record.dAccount;
         cout << "| " << setw(10) << left << record.Amount;
         cout << "| " << setw(10) << left << record.sBalance;
         cout << "| " << setw(10) << left << record.dBalance;
-        cout << "| " << setw(10) << left << record.sAccount;
+        cout << "| " << setw(10) << left << record.UserName;
     }
 
 public:
@@ -61,6 +61,7 @@ public:
 
 
     }
+
 
 
 };
