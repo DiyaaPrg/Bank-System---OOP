@@ -100,8 +100,59 @@ private:
 		 return clsCurrency(enMode::EmptyMode, "", "", "", 0);
 	 }
 
+	 struct stUpdateCurrencyRegisterRecord;
+
+	 string _ConvertRecordToLine(float newRate)
+	 {
+		 string line;
+		 
+		 line += clsDate::GetSystemDateTimeString() + "#//#";
+		 line += this->_CurrencyCode + "#//#";
+		 line += to_string(this->_Rate) + "#//#";
+		 line += to_string(newRate);
+
+		 return line;
+	 }
+
+	 void _AddUpdateRecordToFile(float newRate)
+	 {
+		 string record = _ConvertRecordToLine(newRate);
+
+		 fstream file;
+		 file.open("CurrencyUpdateRegister.txt", ios::out | ios::in);
+
+		 if (file.is_open())
+		 {
+			 file << record << endl;
+		 }
+
+		 file.close();
+	 }
+
+	 static stUpdateCurrencyRegisterRecord _ConvertLineToRecord(string line)
+	 {
+		 vector <string> vLine = clsString::Split(line, "#//#");
+
+		 stUpdateCurrencyRegisterRecord record;
+		 record.Date = vLine[0];
+		 record.CurrencyCode = vLine[1];
+		 record.ValueFrom = stof(vLine[2]);
+		 record.ValueTo = stof(vLine[3]);
+
+		 return record;
+
+	 }
+
 
 public:
+
+	struct stUpdateCurrencyRegisterRecord
+	{
+		string Date;
+		string CurrencyCode;
+		float ValueFrom;
+		float ValueTo;
+	};
 
 	clsCurrency(enMode mode, string country, string currencyCode, string currencyName, float rate)
 	{
@@ -134,6 +185,7 @@ public:
 
 	void UpdateRate(float NewRate)
 	{
+		_AddUpdateRecordToFile(NewRate);
 		_Rate = NewRate;
 		_Update();
 	}
@@ -227,8 +279,26 @@ public:
 		return (amountInUSD * currency2.Rate());
 	}
 
+	static vector <stUpdateCurrencyRegisterRecord> GetUpdateRegisterList()
+	{
+		vector <stUpdateCurrencyRegisterRecord> vUpdateRegister;
+
+		fstream file;
+		file.open("CurrencyUpdateRegister.txt", ios::in);
+
+		if (file.is_open())
+		{
+			string line;
+			while (getline(file, line))
+			{
+				stUpdateCurrencyRegisterRecord record = _ConvertLineToRecord(line);
+				vUpdateRegister.push_back(record);
+			}
+		}
+		file.close();
+		return vUpdateRegister;
+	}
+
 
 };
-
-
 
