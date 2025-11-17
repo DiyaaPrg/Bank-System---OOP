@@ -9,18 +9,20 @@
 #include "clsShowFindCurrencyScreen.h"
 #include "clsShowUpdateRateScreen.h"
 #include "clsShowCurrencyCalculatorScreen.h"
+#include "clsShowUpdateRegisterScreen.h"
 using namespace std;
 
 
 class clsShowCurrenciesScreen : protected clsScreen
 {
 private:
-    enum enCurrencyMenueOptions {eListCurrencies = 1, eFindCurrency = 2, eUpdateRate = 3, eCurrencyCalculator = 4, eMainMenue = 5 };
+    enum enCurrencyMenueOptions {eListCurrencies = 1, eFindCurrency = 2, eUpdateRate = 3, eCurrencyCalculator = 4, eRateRegister = 5
+        ,eMainMenue = 6 };
 
     static short _ReadCurrenciesMenueOption()
     {
         cout << setw(37) << left << "" << "Choose what do you want to do? [1 to 5]? ";
-        short Choice = clsInputValidate::ReadIntNumberBetween(1, 5, "Enter Number between 1 to 5? ");
+        short Choice = clsInputValidate::ReadNumberBetween<short>(1, 5, "Enter Number between 1 to 5? ");
         return Choice;
     }
 
@@ -50,6 +52,11 @@ private:
     static void _ShowCurrencyCalculatorScreen()
     {
         clsShowCurrencyCalculatorScreen::ShowCurrencyCalculatorScreen();
+    }
+
+    static void _ShowUpdateRateRegister()
+    {
+        clsShowUpdateRegisterScreen::ShowUpdateRegisterScreen();
     }
 
     static void _PerformCurrencyOptions(enCurrencyMenueOptions option)
@@ -89,6 +96,14 @@ private:
             break;
         }
 
+        case(enCurrencyMenueOptions::eRateRegister):
+        {
+            system("cls");
+            _ShowUpdateRateRegister();
+            _GoBackToCurrenciesScreen();
+            break;
+        }
+
         case (enCurrencyMenueOptions::eMainMenue):
         {
 
@@ -112,7 +127,8 @@ public:
         cout << setw(37) << left << "" << "\t[2] Find Currency.\n";
         cout << setw(37) << left << "" << "\t[3] Update Rate.\n";
         cout << setw(37) << left << "" << "\t[4] Currency Calculator.\n";
-        cout << setw(37) << left << "" << "\t[5] Main Menue.\n";
+        cout << setw(37) << left << "" << "\t[5] Rate Update Register.\n";
+        cout << setw(37) << left << "" << "\t[6] Main Menue.\n";
         cout << setw(37) << left << "" << "=============================================\n";
 
         _PerformCurrencyOptions(enCurrencyMenueOptions(_ReadCurrenciesMenueOption()));
